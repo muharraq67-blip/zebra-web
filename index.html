@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zebra AI Analyzer</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f8;
+  text-align: center;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: auto;
+}
+
+button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+img {
+  max-width: 100%;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>رفع صورة للتحليل 🐦</h2>
+
+  <input type="file" id="fileInput"><br>
+  <button onclick="analyze()">تحليل الصورة</button>
+
+  <div id="preview"></div>
+  <div id="result"></div>
+</div>
+
+<script>
+async function analyze() {
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("اختر صورة أولاً");
+    return;
+  }
+
+  document.getElementById("preview").innerHTML =
+    `<img src="${URL.createObjectURL(file)}">`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  document.getElementById("result").innerHTML = "⏳ جاري التحليل...";
+
+  try {
+    const res = await fetch("https://zebra-ai-server-production.up.railway.app/analyze-upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("result").innerHTML =
+      `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+
+  } catch (err) {
+    document.getElementById("result").innerHTML = "❌ خطأ في الاتصال";
+    console.error(err);
+  }
+}
+</script>
+
+</body>
+</html>
