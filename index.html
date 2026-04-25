@@ -35,9 +35,11 @@
       <button class="active" onclick="showPage('home',this)"><span>🏠</span>الرئيسية</button>
       <button onclick="showPage('birds',this)"><span>🐦</span>الطيور</button>
       <button onclick="showPage('pairs',this)"><span>👥</span>الأزواج</button>
+      <button onclick="showPage('breeding',this)"><span>🧮</span>حاسبة التزاوج</button>
       <button onclick="showPage('production',this)"><span>📈</span>الإنتاج</button>
       <button onclick="showPage('ai',this)"><span>🤖</span>تحليل AI</button>
       <button onclick="showPage('mutations',this)"><span>🧬</span>مكتبة الطفرات</button>
+      <button onclick="showPage('knowledge',this)"><span>🧠</span>قاعدة التعرف</button>
       <button onclick="showPage('reports',this)"><span>📊</span>التقارير</button>
       <button onclick="showPage('settings',this)"><span>⚙️</span>الإعدادات</button>
     </nav>
@@ -64,6 +66,57 @@
     <section id="birds" class="page"><div class="card full"><h3>🐦 إدارة الطيور</h3><div class="form"><input id="birdName" placeholder="اسم/رقم الطائر"><select id="birdGender"><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option><option value="غير معروف">غير معروف</option></select><input id="birdMutation" placeholder="الطفرة مثال: فول أورنج"><input id="birdColor" placeholder="اللون"><input id="birdAge" placeholder="العمر"><input id="birdRing" placeholder="رقم الحجل"><textarea id="birdNotes" placeholder="ملاحظات"></textarea></div><div class="actions"><button class="btn primary" onclick="addBird()">حفظ الطائر</button><button class="btn" onclick="clearBirds()">مسح الكل</button></div></div><div class="card full"><h3>قائمة الطيور</h3><div class="list" id="birdsList"></div></div></section>
 
     <section id="pairs" class="page"><div class="card full"><h3>💞 إدارة الأزواج</h3><div class="form"><input id="pairMale" placeholder="الذكر"><input id="pairFemale" placeholder="الأنثى"><input id="pairDate" type="date"><input id="pairNest" placeholder="رقم القفص/العش"><textarea id="pairNotes" placeholder="ملاحظات الزوج"></textarea></div><div class="actions"><button class="btn primary" onclick="addPair()">حفظ الزوج</button></div></div><div class="card full"><h3>قائمة الأزواج</h3><div class="list" id="pairsList"></div></div></section>
+
+    <section id="breeding" class="page">
+      <div class="grid">
+        <div class="card half">
+          <h3>♂️ الذكر</h3>
+          <div class="form">
+            <input id="breedMaleName" placeholder="اسم الذكر">
+            <select id="breedMaleBase"><option>رمادي عادي</option><option>فاون</option><option>إيزابيل</option><option>لايت باك</option></select>
+            <label><input type="checkbox" value="Ob" class="maleGene"> أورنج بريست Ob</label>
+            <label><input type="checkbox" value="Bb" class="maleGene"> بلاك بريست Bb</label>
+            <label><input type="checkbox" value="Bf" class="maleGene"> بلاك فيس Bf</label>
+            <label><input type="checkbox" value="Cr" class="maleGene"> كريستد Cr</label>
+            <label><input type="checkbox" value="Cfw" class="maleGene"> شستنت فلاك وايت Cfw</label>
+            <label><input type="checkbox" value="Is" class="maleGene"> إيزابيل Is</label>
+          </div>
+        </div>
+
+        <div class="card half">
+          <h3>♀️ الأنثى</h3>
+          <div class="form">
+            <input id="breedFemaleName" placeholder="اسم الأنثى">
+            <select id="breedFemaleBase"><option>رمادي عادي</option><option>فاون</option><option>إيزابيل</option><option>لايت باك</option></select>
+            <label><input type="checkbox" value="Ob" class="femaleGene"> أورنج بريست Ob</label>
+            <label><input type="checkbox" value="Bb" class="femaleGene"> بلاك بريست Bb</label>
+            <label><input type="checkbox" value="Bf" class="femaleGene"> بلاك فيس Bf</label>
+            <label><input type="checkbox" value="Cr" class="femaleGene"> كريستد Cr</label>
+            <label><input type="checkbox" value="Cfw" class="femaleGene"> شستنت فلاك وايت Cfw</label>
+            <label><input type="checkbox" value="Is" class="femaleGene"> إيزابيل Is</label>
+          </div>
+        </div>
+
+        <div class="card full">
+          <h3>🧬 حاسبة ناتج التزاوج</h3>
+          <div class="actions">
+            <button class="btn primary" onclick="calculateBreeding()">احسب النتائج</button>
+            <button class="btn" onclick="saveBreedingPlan()">حفظ خطة التزاوج</button>
+          </div>
+          <div class="result" id="breedingSummary">اختر طفرات الذكر والأنثى ثم اضغط احسب النتائج.</div>
+        </div>
+
+        <div class="card full">
+          <h3>📊 النتائج المتوقعة</h3>
+          <div class="mutationGrid" id="breedingResults"></div>
+        </div>
+
+        <div class="card full">
+          <h3>🤖 توصية الذكاء الاصطناعي</h3>
+          <div class="result" id="breedingAdvice">ستظهر هنا نصائح التزاوج بعد الحساب.</div>
+        </div>
+      </div>
+    </section>
 
     <section id="production" class="page"><div class="card full"><h3>🐣 الإنتاج والفروخ</h3><div class="form"><input id="prodPair" placeholder="اسم الزوج"><input id="prodEggs" type="number" placeholder="عدد البيض"><input id="prodChicks" type="number" placeholder="عدد الفروخ"><input id="prodDate" type="date"><textarea id="prodNotes" placeholder="ملاحظات الإنتاج"></textarea></div><div class="actions"><button class="btn primary" onclick="addProduction()">حفظ الإنتاج</button></div></div><div class="card full"><h3>سجل الإنتاج</h3><div class="list" id="productionList"></div></div></section>
 
@@ -96,6 +149,30 @@ function renderAll(){statBirds.textContent=db.birds.length;statPairs.textContent
 function renderReports(){reportsBox.textContent=`عدد الطيور: ${db.birds.length}\nعدد الأزواج: ${db.pairs.length}\nإجمالي البيض: ${db.production.reduce((s,x)=>s+x.eggs,0)}\nإجمالي الفروخ: ${db.production.reduce((s,x)=>s+x.chicks,0)}\nنسبة الفقس التقريبية: ${db.production.reduce((s,x)=>s+x.eggs,0)?Math.round(db.production.reduce((s,x)=>s+x.chicks,0)/db.production.reduce((s,x)=>s+x.eggs,0)*100):0}%`}
 function backupData(){backupBox.value=JSON.stringify(db,null,2);const blob=new Blob([backupBox.value],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zebra-backup.json';a.click()}
 function suggestPairing(){const male=db.birds.find(b=>b.gender==='ذكر'), female=db.birds.find(b=>b.gender==='أنثى');pairSuggest.innerHTML=male&&female?`<b>${male.name}</b> × <b>${female.name}</b><br>اقتراح: راقب الطفرات (${male.mutation} × ${female.mutation}) وسجل الإنتاج المتوقع.`:'أضف ذكرًا وأنثى أولًا للحصول على اقتراح.'}
+function selectedGenes(cls){return [...document.querySelectorAll('.'+cls+':checked')].map(x=>x.value)}
+function geneName(code){return ({Ob:'أورنج بريست',Bb:'بلاك بريست',Bf:'بلاك فيس',Cr:'كريستد',Cfw:'شستنت فلاك وايت',Is:'إيزابيل'}[code]||code)}
+function calculateBreeding(){
+  const male=selectedGenes('maleGene'), female=selectedGenes('femaleGene');
+  const maleBase=breedMaleBase.value, femaleBase=breedFemaleBase.value;
+  const all=[...new Set([...male,...female])];
+  if(!all.length){breedingSummary.textContent='لم يتم اختيار أي طفرة. الناتج المتوقع غالبًا رمادي عادي مع احتمالات حوامل غير ظاهرة.';breedingResults.innerHTML='';return}
+  const results=[];
+  all.forEach(g=>{
+    const m=male.includes(g), f=female.includes(g);
+    if(m&&f){results.push({name:geneName(g),code:g,prob:50,type:'ظاهر في نسبة عالية',note:'كلا الأبوين يحملان أو يظهران الطفرة'});results.push({name:'حامل '+geneName(g),code:g,prob:50,type:'حامل',note:'جزء من الفروخ قد يحمل الطفرة'});}
+    else if(m||f){results.push({name:'حامل '+geneName(g),code:g,prob:50,type:'حامل محتمل',note:'طفرة موجودة في أحد الأبوين فقط، غالبًا تظهر كحامل أو احتمال منخفض للظهور حسب نوع الوراثة'});results.push({name:'عادي غير حامل ظاهرًا',code:'normal',prob:50,type:'عادي',note:'لا يظهر عليه تأثير الطفرة بوضوح'});}
+  });
+  const baseMix = maleBase===femaleBase ? maleBase : `${maleBase} × ${femaleBase}`;
+  breedingSummary.innerHTML=`<b>الذكر:</b> ${breedMaleName.value||'غير مسمى'} — ${maleBase} — ${male.map(geneName).join('، ')||'بدون طفرات'}<br><b>الأنثى:</b> ${breedFemaleName.value||'غير مسماة'} — ${femaleBase} — ${female.map(geneName).join('، ')||'بدون طفرات'}<br><b>الأساس اللوني:</b> ${baseMix}`;
+  breedingResults.innerHTML=results.map(r=>`<div class="mutation"><b>${r.prob}%</b><h4>${r.name}</h4><p class="muted">${r.type}</p><span class="tag">${r.code}</span><p>${r.note}</p></div>`).join('');
+  const rare=all.length>=3?'هذا تزاوج غني بالطفرات وقد يعطي تنوعًا عاليًا، لكن يفضل تسجيل كل فرخ بدقة.':'تزاوج جيد للتثبيت، ويمكن تحسينه بإضافة بيانات الأبوين والأجداد.';
+  breedingAdvice.innerHTML=`<b>توصية:</b> ${rare}<br>⚠️ النتائج تقديرية؛ للحصول على دقة وراثية أعلى نحتاج تحديد نوع كل طفرة: سائدة، متنحية، أو مرتبطة بالجنس.`;
+}
+function saveBreedingPlan(){
+  const plan={id:Date.now(),male:breedMaleName.value||'ذكر',female:breedFemaleName.value||'أنثى',maleGenes:selectedGenes('maleGene'),femaleGenes:selectedGenes('femaleGene'),date:new Date().toISOString().slice(0,10)};
+  db.pairs.push({id:plan.id,male:plan.male,female:plan.female,date:plan.date,nest:'خطة تزاوج',notes:`ذكر: ${plan.maleGenes.join(', ')} | أنثى: ${plan.femaleGenes.join(', ')}`});
+  save(); alert('تم حفظ خطة التزاوج ضمن الأزواج');
+}</b> × <b>${female.name}</b><br>اقتراح: راقب الطفرات (${male.mutation} × ${female.mutation}) وسجل الإنتاج المتوقع.`:'أضف ذكرًا وأنثى أولًا للحصول على اقتراح.'}
 async function analyzeImage(inputId,previewId,resultId){const input=document.getElementById(inputId), file=input.files[0], preview=document.getElementById(previewId), result=document.getElementById(resultId); if(!file){alert('اختر صورة أولاً');return} preview.innerHTML=`<img src="${URL.createObjectURL(file)}">`; const fd=new FormData();fd.append('file',file); result.textContent='⏳ جاري تحليل الصورة...'; try{const res=await fetch(API_URL,{method:'POST',body:fd}); const data=await res.json(); result.innerHTML=`<h3>✅ نتيجة التحليل</h3><pre style="direction:ltr;text-align:left;white-space:pre-wrap">${JSON.stringify(data,null,2)}</pre>`}catch(e){result.textContent='❌ خطأ في الاتصال: '+e.message}}
 renderAll();renderReports();
 </script>
