@@ -138,7 +138,19 @@ const mutations=[['Bb','بلاك بريست','صدر أسود ونمط مميز'
 let db=JSON.parse(localStorage.getItem('zebraDB')||'{"birds":[],"pairs":[],"production":[]}');
 function save(){localStorage.setItem('zebraDB',JSON.stringify(db));renderAll()}
 function toggleMenu(){document.getElementById('sidebar').classList.toggle('open')}
-function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); document.getElementById('sidebar').classList.remove('open'); if(id==='reports')renderReports()}
+function showPage(id,btn){
+  const page=document.getElementById(id);
+  if(!page){alert('هذه الصفحة غير موجودة في الكود: '+id);return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  page.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(id==='home') document.querySelector('.hero').style.display='grid';
+  else document.querySelector('.hero').style.display='none';
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='reports')renderReports();
+}
 function addBird(){const b={id:Date.now(),name:birdName.value||'طائر جديد',gender:birdGender.value,mutation:birdMutation.value||'غير محدد',color:birdColor.value||'',age:birdAge.value||'',ring:birdRing.value||'',notes:birdNotes.value||''};db.birds.push(b);birdName.value=birdMutation.value=birdColor.value=birdAge.value=birdRing.value=birdNotes.value='';save()}
 function addPair(){db.pairs.push({id:Date.now(),male:pairMale.value,female:pairFemale.value,date:pairDate.value,nest:pairNest.value,notes:pairNotes.value});pairMale.value=pairFemale.value=pairDate.value=pairNest.value=pairNotes.value='';save()}
 function addProduction(){db.production.push({id:Date.now(),pair:prodPair.value,eggs:+prodEggs.value||0,chicks:+prodChicks.value||0,date:prodDate.value,notes:prodNotes.value});prodPair.value=prodEggs.value=prodChicks.value=prodDate.value=prodNotes.value='';save()}
