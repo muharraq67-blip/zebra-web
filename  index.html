@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zebra AI Analyzer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #222;
+    }
+
+    input, button {
+      margin: 10px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 15px;
+      border-radius: 14px;
+    }
+
+    .result {
+      margin-top: 20px;
+      text-align: right;
+      background: #f9fafb;
+      padding: 18px;
+      border-radius: 14px;
+      line-height: 1.8;
+      white-space: normal;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .loading {
+      color: #2563eb;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>🐦 محلل طيور الزيبرا</h1>
+    <p>ارفع صورة الطائر وسيتم تحليلها بالذكاء الاصطناعي</p>
+
+    <input type="file" id="fileInput" accept="image/*" />
+    <br />
+
+    <button onclick="upload()">تحليل الصورة</button>
+
+    <div id="preview"></div>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    async function upload() {
+      const fileInput = document.getElementById("fileInput");
+      const result = document.getElementById("result");
+      const preview = document.getElementById("preview");
+
+      if (!fileInput.files.length) {
+        alert("اختر صورة أولاً");
+        return;
+      }
+
+      const file = fileInput.files[0];
+
+      preview.innerHTML = `
+        <img src="${URL.createObjectURL(file)}" alt="preview">
+      `;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      result.innerHTML = `<p class="loading">⏳ جاري تحليل الصورة...</p>`;
+
+      try {
+        const res = await fetch("https://zebra-ai-server-production.up.railway.app/analyze-upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+
+        result.innerHTML = `
+          <h2>📊 نتيجة التحليل</h2>
+
+          <p><span class="badge">تم التحليل بنجاح</span></p>
+
+          <h3>📝 الوصف</h3>
+          <p>${data.description || "لا يوجد وصف"}</p>
+
+          <h3>🐦 معلومات الطائر</h3>
+          <p><b>النوع:</b> ${data.image_description?.details?.species || data.objects?.[0]?.type || "غير معروف"}</p>
+          <p><b>اللون:</b> ${data.image_description?.details?.color || data.objects?.[0]?.color || "غير معروف"}</p>
+          <p><b>الوضعية:</b> ${data.image_description?.details?.position || data.objects?.[0]?.activity || "غير معروف"}</p>
+
+          <h3>🔍 التفاصيل</h3>
+          <p><b>البيئة:</b> ${data.environment || "غير معروف"}</p>
+          <p><b>الجودة:</b> ${data.quality || "غير معروف"}</p>
+          <p><b>ملاحظات:</b> ${data.notable_details || data.notes || "لا توجد ملاحظات"}</p>
+
+          <h3>📦 البيانات الكاملة</h3>
+          <pre style="direction:ltr; text-align:left; overflow:auto;">${JSON.stringify(data, null, 2)}</pre>
+        `;
+
+      } catch (err) {
+        result.innerHTML = `
+          <h3>❌ حدث خطأ</h3>
+          <p>${err}</p>
+        `;
+      }
+    }
+  </script>
+
+</body>
+</html>
