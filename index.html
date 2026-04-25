@@ -1,192 +1,174 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>زِيبرا فينش | نظام إدارة الطيور الذكي</title>
-  <style>
-    :root{
-      --bg:#071018; --panel:#0e1a24; --panel2:#132330; --line:#263b4c;
-      --gold:#f6a623; --gold2:#b87318; --text:#eef6ff; --muted:#a9b7c5;
-      --green:#4ade80; --red:#ff5b5b; --blue:#60a5fa; --cyan:#22d3ee;
-      --shadow:0 18px 60px rgba(0,0,0,.45); --radius:22px;
-    }
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,Tahoma,sans-serif;background:radial-gradient(circle at top,#172330,#050a0f 70%);color:var(--text)}
-    button,input,select,textarea{font:inherit} button{cursor:pointer}
-    .app{min-height:100vh;display:grid;grid-template-columns:250px 1fr;gap:18px;padding:18px}
-    .sidebar{background:linear-gradient(180deg,rgba(18,31,43,.96),rgba(7,14,21,.96));border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:sticky;top:18px;height:calc(100vh - 36px)}
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.brand .logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--gold),#7c3f00);display:grid;place-items:center;font-size:26px}.brand h2{margin:0;color:var(--gold);font-size:23px}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
-    .nav{display:grid;gap:9px}.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:1px solid transparent;border-radius:16px;background:transparent;color:var(--muted);text-align:right}.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(246,166,35,.28),rgba(184,115,24,.12));border-color:rgba(246,166,35,.45);color:#fff}.nav span{font-size:22px}
-    .main{display:grid;gap:18px}.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(12,25,36,.95),rgba(5,10,15,.95));border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 360px;gap:20px}.hero h1{font-size:44px;color:var(--gold);margin:0}.hero p{color:var(--muted);font-size:18px}.birdArt{min-height:220px;border-radius:20px;background:radial-gradient(circle at 30% 30%,#ffb45a,transparent 18%),linear-gradient(135deg,#1b2c3d,#081018);display:grid;place-items:center;font-size:110px;border:1px solid var(--line)}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:linear-gradient(180deg,rgba(18,31,43,.94),rgba(8,16,24,.94));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.card h3{margin:0 0 14px;color:#fff}.stat{grid-column:span 4;text-align:center}.stat .icon{font-size:38px}.stat b{display:block;font-size:36px;margin:8px 0}.stat small{color:var(--muted);font-size:17px}.ai{grid-column:span 8}.sideCard{grid-column:span 4}.full{grid-column:span 12}.half{grid-column:span 6}.third{grid-column:span 4}
-    .aiBox{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:center}.preview{height:210px;border-radius:18px;border:1px solid var(--line);background:#081018;display:grid;place-items:center;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}.result{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:210px;white-space:pre-wrap;overflow:auto;max-height:360px}.btn{border:1px solid var(--line);background:linear-gradient(135deg,#1c3244,#0b1721);color:#fff;padding:12px 16px;border-radius:14px}.btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:#d38b24;color:#160d02;font-weight:bold}.btn.green{background:linear-gradient(135deg,#22c55e,#166534)}.btn.red{background:linear-gradient(135deg,#ef4444,#7f1d1d)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .list{display:grid;gap:10px}.row{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}.muted{color:var(--muted)}.tag{display:inline-block;padding:5px 10px;border-radius:999px;background:rgba(246,166,35,.15);color:var(--gold);border:1px solid rgba(246,166,35,.3);font-weight:bold}
-    .form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.form input,.form select,.form textarea{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:#071018;color:#fff}.form textarea{grid-column:span 2;min-height:90px}.hidden{display:none!important}.page{display:none}.page.active{display:grid;gap:16px}.mutationGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.mutation{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035)}.mutation b{color:var(--gold);font-size:22px}
-    .quick{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.quick button{min-height:90px;font-size:18px}.footer{color:var(--muted);text-align:center;padding:12px}.mobileMenu{display:none}
-    @media(max-width:900px){.app{grid-template-columns:1fr;padding:10px}.sidebar{position:fixed;z-index:20;right:10px;left:10px;top:10px;height:auto;transform:translateY(-120%);transition:.25s}.sidebar.open{transform:translateY(0)}.mobileMenu{display:block;position:fixed;top:12px;right:12px;z-index:30}.hero{grid-template-columns:1fr;padding-top:58px}.grid{grid-template-columns:1fr}.stat,.ai,.sideCard,.full,.half,.third{grid-column:auto}.aiBox{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form textarea{grid-column:auto}.hero h1{font-size:34px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zebra Finch AI</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b1220;
+  color:#fff;
+}
+.nav {
+  position:fixed;
+  right:0;
+  top:0;
+  height:100%;
+  width:200px;
+  background:#111a2e;
+  padding:10px;
+}
+.nav button {
+  width:100%;
+  padding:12px;
+  margin:5px 0;
+  background:none;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+}
+.nav button.active {
+  background:#f59e0b;
+}
+
+.main {
+  margin-right:210px;
+  padding:20px;
+}
+
+.page {
+  display:none;
+}
+
+.page.active {
+  display:block;
+}
+
+.card {
+  background:#1e293b;
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+
+input, select {
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+}
+
+.btn {
+  padding:10px;
+  background:#f59e0b;
+  border:none;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.result-card {
+  background:#334155;
+  padding:10px;
+  margin:10px 0;
+  border-radius:8px;
+}
+</style>
 </head>
+
 <body>
-<button class="btn mobileMenu" onclick="toggleMenu()">☰</button>
-<div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="logo">🐦</div><div><h2>زيبرا فينش</h2><p>نظام إدارة الطيور الذكي</p></div></div>
-    <nav class="nav">
-      <button class="active" onclick="showPage('home',this)"><span>🏠</span>الرئيسية</button>
-      <button onclick="showPage('birds',this)"><span>🐦</span>الطيور</button>
-      <button onclick="showPage('pairs',this)"><span>👥</span>الأزواج</button>
-      <button onclick="showPage('breeding',this)"><span>🧮</span>حاسبة التزاوج</button>
-      <button onclick="showPage('production',this)"><span>📈</span>الإنتاج</button>
-      <button onclick="showPage('ai',this)"><span>🤖</span>تحليل AI</button>
-      <button onclick="showPage('mutations',this)"><span>🧬</span>مكتبة الطفرات</button>
-      <button onclick="showPage('knowledge',this)"><span>🧠</span>قاعدة التعرف</button>
-      <button onclick="showPage('reports',this)"><span>📊</span>التقارير</button>
-      <button onclick="showPage('settings',this)"><span>⚙️</span>الإعدادات</button>
-    </nav>
-  </aside>
 
-  <main class="main">
-    <section class="hero">
-      <div><h1>زيبرا فينش</h1><p>إدارة احترافية للطيور، الأزواج، الإنتاج، الطفرات، والتحليل الذكي بالصور.</p><div class="actions"><button class="btn primary" onclick="showPage('ai')">تحليل صورة الآن</button><button class="btn" onclick="showPage('birds')">إضافة طائر</button></div></div>
-      <div class="birdArt">🐦</div>
-    </section>
+<div class="nav">
+  <button onclick="showPage('home',this)" class="active">الرئيسية</button>
+  <button onclick="showPage('breeding',this)">حاسبة التزاوج</button>
+</div>
 
-    <section id="home" class="page active">
-      <div class="grid">
-        <div class="card stat"><div class="icon">🐦</div><b id="statBirds">0</b><small>الطيور</small></div>
-        <div class="card stat"><div class="icon">💞</div><b id="statPairs">0</b><small>الأزواج</small></div>
-        <div class="card stat"><div class="icon">🐣</div><b id="statChicks">0</b><small>الفروخ</small></div>
-        <div class="card ai"><h3>🤖 تحليل الطير بالذكاء الاصطناعي</h3><div class="aiBox"><div class="preview" id="homePreview">📷</div><div><input type="file" id="homeFile" accept="image/*"><div class="actions"><button class="btn primary" onclick="analyzeImage('homeFile','homePreview','homeResult')">تحليل جديد</button></div><div class="result" id="homeResult">اختر صورة لتحليل الطائر.</div></div></div></div>
-        <div class="card sideCard"><h3>⚡ أدوات سريعة</h3><div class="quick"><button class="btn" onclick="showPage('birds')">➕🐦<br>إضافة طائر</button><button class="btn" onclick="showPage('pairs')">❤️<br>إضافة زوج</button><button class="btn" onclick="showPage('production')">🐣<br>إضافة إنتاج</button><button class="btn" onclick="backupData()">☁️<br>نسخ احتياطي</button></div></div>
-        <div class="card half"><h3>🧬 الطفرات الشائعة</h3><div class="mutationGrid" id="homeMutations"></div></div>
-        <div class="card half"><h3>❤️ تزاوج مقترح</h3><div class="result" id="pairSuggest">أضف طيورًا مع الجنس والطفرة لاقتراح أزواج.</div><button class="btn primary" onclick="suggestPairing()">اقتراح تزاوج</button></div>
-      </div>
-    </section>
+<div class="main">
 
-    <section id="birds" class="page"><div class="card full"><h3>🐦 إدارة الطيور</h3><div class="form"><input id="birdName" placeholder="اسم/رقم الطائر"><select id="birdGender"><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option><option value="غير معروف">غير معروف</option></select><input id="birdMutation" placeholder="الطفرة مثال: فول أورنج"><input id="birdColor" placeholder="اللون"><input id="birdAge" placeholder="العمر"><input id="birdRing" placeholder="رقم الحجل"><textarea id="birdNotes" placeholder="ملاحظات"></textarea></div><div class="actions"><button class="btn primary" onclick="addBird()">حفظ الطائر</button><button class="btn" onclick="clearBirds()">مسح الكل</button></div></div><div class="card full"><h3>قائمة الطيور</h3><div class="list" id="birdsList"></div></div></section>
+<!-- الصفحة الرئيسية -->
+<div id="home" class="page active">
+  <div class="card">
+    <h2>زِبرا فينش 🐦</h2>
+    <p>نظام إدارة الطيور + الذكاء الاصطناعي</p>
+  </div>
+</div>
 
-    <section id="pairs" class="page"><div class="card full"><h3>💞 إدارة الأزواج</h3><div class="form"><input id="pairMale" placeholder="الذكر"><input id="pairFemale" placeholder="الأنثى"><input id="pairDate" type="date"><input id="pairNest" placeholder="رقم القفص/العش"><textarea id="pairNotes" placeholder="ملاحظات الزوج"></textarea></div><div class="actions"><button class="btn primary" onclick="addPair()">حفظ الزوج</button></div></div><div class="card full"><h3>قائمة الأزواج</h3><div class="list" id="pairsList"></div></div></section>
+<!-- حاسبة التزاوج -->
+<div id="breeding" class="page">
 
-    <section id="breeding" class="page">
-      <div class="grid">
-        <div class="card half">
-          <h3>♂️ الذكر</h3>
-          <div class="form">
-            <input id="breedMaleName" placeholder="اسم الذكر">
-            <select id="breedMaleBase"><option>رمادي عادي</option><option>فاون</option><option>إيزابيل</option><option>لايت باك</option></select>
-            <label><input type="checkbox" value="Ob" class="maleGene"> أورنج بريست Ob</label>
-            <label><input type="checkbox" value="Bb" class="maleGene"> بلاك بريست Bb</label>
-            <label><input type="checkbox" value="Bf" class="maleGene"> بلاك فيس Bf</label>
-            <label><input type="checkbox" value="Cr" class="maleGene"> كريستد Cr</label>
-            <label><input type="checkbox" value="Cfw" class="maleGene"> شستنت فلاك وايت Cfw</label>
-            <label><input type="checkbox" value="Is" class="maleGene"> إيزابيل Is</label>
-          </div>
-        </div>
+  <div class="card">
+    <h3>♂️ الذكر</h3>
+    <input id="maleName" placeholder="اسم الذكر">
+    <label><input type="checkbox" value="Ob" class="maleGene"> أورنج بريست</label>
+    <label><input type="checkbox" value="Bb" class="maleGene"> بلاك بريست</label>
+    <label><input type="checkbox" value="Bf" class="maleGene"> بلاك فيس</label>
+  </div>
 
-        <div class="card half">
-          <h3>♀️ الأنثى</h3>
-          <div class="form">
-            <input id="breedFemaleName" placeholder="اسم الأنثى">
-            <select id="breedFemaleBase"><option>رمادي عادي</option><option>فاون</option><option>إيزابيل</option><option>لايت باك</option></select>
-            <label><input type="checkbox" value="Ob" class="femaleGene"> أورنج بريست Ob</label>
-            <label><input type="checkbox" value="Bb" class="femaleGene"> بلاك بريست Bb</label>
-            <label><input type="checkbox" value="Bf" class="femaleGene"> بلاك فيس Bf</label>
-            <label><input type="checkbox" value="Cr" class="femaleGene"> كريستد Cr</label>
-            <label><input type="checkbox" value="Cfw" class="femaleGene"> شستنت فلاك وايت Cfw</label>
-            <label><input type="checkbox" value="Is" class="femaleGene"> إيزابيل Is</label>
-          </div>
-        </div>
+  <div class="card">
+    <h3>♀️ الأنثى</h3>
+    <input id="femaleName" placeholder="اسم الأنثى">
+    <label><input type="checkbox" value="Ob" class="femaleGene"> أورنج بريست</label>
+    <label><input type="checkbox" value="Bb" class="femaleGene"> بلاك بريست</label>
+    <label><input type="checkbox" value="Bf" class="femaleGene"> بلاك فيس</label>
+  </div>
 
-        <div class="card full">
-          <h3>🧬 حاسبة ناتج التزاوج</h3>
-          <div class="actions">
-            <button class="btn primary" onclick="calculateBreeding()">احسب النتائج</button>
-            <button class="btn" onclick="saveBreedingPlan()">حفظ خطة التزاوج</button>
-          </div>
-          <div class="result" id="breedingSummary">اختر طفرات الذكر والأنثى ثم اضغط احسب النتائج.</div>
-        </div>
+  <div class="card">
+    <button class="btn" onclick="calculate()">احسب التزاوج</button>
+    <div id="summary"></div>
+  </div>
 
-        <div class="card full">
-          <h3>📊 النتائج المتوقعة</h3>
-          <div class="mutationGrid" id="breedingResults"></div>
-        </div>
+  <div id="results"></div>
 
-        <div class="card full">
-          <h3>🤖 توصية الذكاء الاصطناعي</h3>
-          <div class="result" id="breedingAdvice">ستظهر هنا نصائح التزاوج بعد الحساب.</div>
-        </div>
-      </div>
-    </section>
+</div>
 
-    <section id="production" class="page"><div class="card full"><h3>🐣 الإنتاج والفروخ</h3><div class="form"><input id="prodPair" placeholder="اسم الزوج"><input id="prodEggs" type="number" placeholder="عدد البيض"><input id="prodChicks" type="number" placeholder="عدد الفروخ"><input id="prodDate" type="date"><textarea id="prodNotes" placeholder="ملاحظات الإنتاج"></textarea></div><div class="actions"><button class="btn primary" onclick="addProduction()">حفظ الإنتاج</button></div></div><div class="card full"><h3>سجل الإنتاج</h3><div class="list" id="productionList"></div></div></section>
-
-    <section id="ai" class="page"><div class="card full"><h3>🤖 تحليل الصور بالذكاء الاصطناعي</h3><div class="aiBox"><div class="preview" id="aiPreview">📷</div><div><input type="file" id="aiFile" accept="image/*"><div class="actions"><button class="btn primary" onclick="analyzeImage('aiFile','aiPreview','aiResult')">تحليل الصورة</button></div><div class="result" id="aiResult">يرجى اختيار صورة واضحة للطائر.</div></div></div></div></section>
-
-    <section id="mutations" class="page"><div class="card full"><h3>🧬 مكتبة الطفرات</h3><div class="mutationGrid" id="mutationGrid"></div></div></section>
-
-    <section id="reports" class="page"><div class="card full"><h3>📊 التقارير</h3><div class="result" id="reportsBox"></div><button class="btn primary" onclick="renderReports()">تحديث التقرير</button></div></section>
-
-    <section id="settings" class="page"><div class="card full"><h3>⚙️ الإعدادات والنسخ الاحتياطي</h3><p class="muted">البيانات تحفظ داخل جهازك عبر المتصفح.</p><div class="actions"><button class="btn green" onclick="backupData()">تحميل نسخة احتياطية</button><button class="btn red" onclick="resetAll()">حذف كل البيانات</button></div><textarea id="backupBox" placeholder="ستظهر النسخة الاحتياطية هنا"></textarea></div></section>
-
-    <div class="footer">Zebra Finch AI Breeding System v1.0.0</div>
-  </main>
 </div>
 
 <script>
-const API_URL="https://zebra-ai-server-production.up.railway.app/analyze-upload";
-const mutations=[['Bb','بلاك بريست','صدر أسود ونمط مميز'],['Ob','أورنج بريست','لون برتقالي في الصدر'],['Bf','بلاك فيس','وجه داكن واضح'],['Lb','لايت باك','ظهر فاتح'],['F','فاون','لون بني فاتح'],['Cfw','شستنت فلاك وايت','أبيض مع علامات بنية'],['P','بنغوين','توزيع أبيض مميز'],['Gr','غري','اللون الرمادي الطبيعي']];
-let db=JSON.parse(localStorage.getItem('zebraDB')||'{"birds":[],"pairs":[],"production":[]}');
-function save(){localStorage.setItem('zebraDB',JSON.stringify(db));renderAll()}
-function toggleMenu(){document.getElementById('sidebar').classList.toggle('open')}
-function showPage(id,btn){
-  const page=document.getElementById(id);
-  if(!page){alert('هذه الصفحة غير موجودة في الكود: '+id);return;}
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  page.classList.add('active');
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  if(id==='home') document.querySelector('.hero').style.display='grid';
-  else document.querySelector('.hero').style.display='none';
-  document.getElementById('sidebar').classList.remove('open');
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='reports')renderReports();
-}
-function addBird(){const b={id:Date.now(),name:birdName.value||'طائر جديد',gender:birdGender.value,mutation:birdMutation.value||'غير محدد',color:birdColor.value||'',age:birdAge.value||'',ring:birdRing.value||'',notes:birdNotes.value||''};db.birds.push(b);birdName.value=birdMutation.value=birdColor.value=birdAge.value=birdRing.value=birdNotes.value='';save()}
-function addPair(){db.pairs.push({id:Date.now(),male:pairMale.value,female:pairFemale.value,date:pairDate.value,nest:pairNest.value,notes:pairNotes.value});pairMale.value=pairFemale.value=pairDate.value=pairNest.value=pairNotes.value='';save()}
-function addProduction(){db.production.push({id:Date.now(),pair:prodPair.value,eggs:+prodEggs.value||0,chicks:+prodChicks.value||0,date:prodDate.value,notes:prodNotes.value});prodPair.value=prodEggs.value=prodChicks.value=prodDate.value=prodNotes.value='';save()}
-function del(type,id){db[type]=db[type].filter(x=>x.id!==id);save()}
-function clearBirds(){if(confirm('حذف كل الطيور؟')){db.birds=[];save()}}
-function resetAll(){if(confirm('حذف كل البيانات؟')){db={birds:[],pairs:[],production:[]};save()}}
-function renderAll(){statBirds.textContent=db.birds.length;statPairs.textContent=db.pairs.length;statChicks.textContent=db.production.reduce((s,x)=>s+(+x.chicks||0),0);birdsList.innerHTML=db.birds.map(b=>`<div class="row"><div><b>${b.name}</b> <span class="tag">${b.gender}</span><br><span class="muted">${b.mutation} - ${b.color} - حجل: ${b.ring||'لا يوجد'}</span></div><button class="btn red" onclick="del('birds',${b.id})">حذف</button></div>`).join('')||'<p class="muted">لا توجد طيور بعد.</p>';pairsList.innerHTML=db.pairs.map(p=>`<div class="row"><div><b>${p.male} × ${p.female}</b><br><span class="muted">${p.date||''} - ${p.nest||''}</span></div><button class="btn red" onclick="del('pairs',${p.id})">حذف</button></div>`).join('')||'<p class="muted">لا توجد أزواج بعد.</p>';productionList.innerHTML=db.production.map(p=>`<div class="row"><div><b>${p.pair||'زوج'}</b><br><span class="muted">بيض: ${p.eggs} | فروخ: ${p.chicks} | ${p.date||''}</span></div><button class="btn red" onclick="del('production',${p.id})">حذف</button></div>`).join('')||'<p class="muted">لا يوجد إنتاج بعد.</p>';mutationGrid.innerHTML=homeMutations.innerHTML=mutations.map(m=>`<div class="mutation"><b>${m[0]}</b><h4>${m[1]}</h4><p class="muted">${m[2]}</p></div>`).join('')}
-function renderReports(){reportsBox.textContent=`عدد الطيور: ${db.birds.length}\nعدد الأزواج: ${db.pairs.length}\nإجمالي البيض: ${db.production.reduce((s,x)=>s+x.eggs,0)}\nإجمالي الفروخ: ${db.production.reduce((s,x)=>s+x.chicks,0)}\nنسبة الفقس التقريبية: ${db.production.reduce((s,x)=>s+x.eggs,0)?Math.round(db.production.reduce((s,x)=>s+x.chicks,0)/db.production.reduce((s,x)=>s+x.eggs,0)*100):0}%`}
-function backupData(){backupBox.value=JSON.stringify(db,null,2);const blob=new Blob([backupBox.value],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zebra-backup.json';a.click()}
-function suggestPairing(){const male=db.birds.find(b=>b.gender==='ذكر'), female=db.birds.find(b=>b.gender==='أنثى');pairSuggest.innerHTML=male&&female?`<b>${male.name}</b> × <b>${female.name}</b><br>اقتراح: راقب الطفرات (${male.mutation} × ${female.mutation}) وسجل الإنتاج المتوقع.`:'أضف ذكرًا وأنثى أولًا للحصول على اقتراح.'}
-function selectedGenes(cls){return [...document.querySelectorAll('.'+cls+':checked')].map(x=>x.value)}
-function geneName(code){return ({Ob:'أورنج بريست',Bb:'بلاك بريست',Bf:'بلاك فيس',Cr:'كريستد',Cfw:'شستنت فلاك وايت',Is:'إيزابيل'}[code]||code)}
-function calculateBreeding(){
-  const male=selectedGenes('maleGene'), female=selectedGenes('femaleGene');
-  const maleBase=breedMaleBase.value, femaleBase=breedFemaleBase.value;
-  const all=[...new Set([...male,...female])];
-  if(!all.length){breedingSummary.textContent='لم يتم اختيار أي طفرة. الناتج المتوقع غالبًا رمادي عادي مع احتمالات حوامل غير ظاهرة.';breedingResults.innerHTML='';return}
-  const results=[];
-  all.forEach(g=>{
-    const m=male.includes(g), f=female.includes(g);
-    if(m&&f){results.push({name:geneName(g),code:g,prob:50,type:'ظاهر في نسبة عالية',note:'كلا الأبوين يحملان أو يظهران الطفرة'});results.push({name:'حامل '+geneName(g),code:g,prob:50,type:'حامل',note:'جزء من الفروخ قد يحمل الطفرة'});}
-    else if(m||f){results.push({name:'حامل '+geneName(g),code:g,prob:50,type:'حامل محتمل',note:'طفرة موجودة في أحد الأبوين فقط، غالبًا تظهر كحامل أو احتمال منخفض للظهور حسب نوع الوراثة'});results.push({name:'عادي غير حامل ظاهرًا',code:'normal',prob:50,type:'عادي',note:'لا يظهر عليه تأثير الطفرة بوضوح'});}
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove('active');
   });
-  const baseMix = maleBase===femaleBase ? maleBase : `${maleBase} × ${femaleBase}`;
-  breedingSummary.innerHTML=`<b>الذكر:</b> ${breedMaleName.value||'غير مسمى'} — ${maleBase} — ${male.map(geneName).join('، ')||'بدون طفرات'}<br><b>الأنثى:</b> ${breedFemaleName.value||'غير مسماة'} — ${femaleBase} — ${female.map(geneName).join('، ')||'بدون طفرات'}<br><b>الأساس اللوني:</b> ${baseMix}`;
-  breedingResults.innerHTML=results.map(r=>`<div class="mutation"><b>${r.prob}%</b><h4>${r.name}</h4><p class="muted">${r.type}</p><span class="tag">${r.code}</span><p>${r.note}</p></div>`).join('');
-  const rare=all.length>=3?'هذا تزاوج غني بالطفرات وقد يعطي تنوعًا عاليًا، لكن يفضل تسجيل كل فرخ بدقة.':'تزاوج جيد للتثبيت، ويمكن تحسينه بإضافة بيانات الأبوين والأجداد.';
-  breedingAdvice.innerHTML=`<b>توصية:</b> ${rare}<br>⚠️ النتائج تقديرية؛ للحصول على دقة وراثية أعلى نحتاج تحديد نوع كل طفرة: سائدة، متنحية، أو مرتبطة بالجنس.`;
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
-function saveBreedingPlan(){
-  const plan={id:Date.now(),male:breedMaleName.value||'ذكر',female:breedFemaleName.value||'أنثى',maleGenes:selectedGenes('maleGene'),femaleGenes:selectedGenes('femaleGene'),date:new Date().toISOString().slice(0,10)};
-  db.pairs.push({id:plan.id,male:plan.male,female:plan.female,date:plan.date,nest:'خطة تزاوج',notes:`ذكر: ${plan.maleGenes.join(', ')} | أنثى: ${plan.femaleGenes.join(', ')}`});
-  save(); alert('تم حفظ خطة التزاوج ضمن الأزواج');
-}</b> × <b>${female.name}</b><br>اقتراح: راقب الطفرات (${male.mutation} × ${female.mutation}) وسجل الإنتاج المتوقع.`:'أضف ذكرًا وأنثى أولًا للحصول على اقتراح.'}
-async function analyzeImage(inputId,previewId,resultId){const input=document.getElementById(inputId), file=input.files[0], preview=document.getElementById(previewId), result=document.getElementById(resultId); if(!file){alert('اختر صورة أولاً');return} preview.innerHTML=`<img src="${URL.createObjectURL(file)}">`; const fd=new FormData();fd.append('file',file); result.textContent='⏳ جاري تحليل الصورة...'; try{const res=await fetch(API_URL,{method:'POST',body:fd}); const data=await res.json(); result.innerHTML=`<h3>✅ نتيجة التحليل</h3><pre style="direction:ltr;text-align:left;white-space:pre-wrap">${JSON.stringify(data,null,2)}</pre>`}catch(e){result.textContent='❌ خطأ في الاتصال: '+e.message}}
-renderAll();renderReports();
+
+function getGenes(cls){
+  return [...document.querySelectorAll('.'+cls+':checked')].map(e=>e.value);
+}
+
+function calculate(){
+  const male = getGenes('maleGene');
+  const female = getGenes('femaleGene');
+
+  const all = [...new Set([...male, ...female])];
+
+  let results = [];
+
+  all.forEach(g=>{
+    if(male.includes(g) && female.includes(g)){
+      results.push({name:g, prob:50});
+    }else{
+      results.push({name:"حامل "+g, prob:50});
+    }
+  });
+
+  document.getElementById('summary').innerHTML =
+    "تم الحساب ✔️";
+
+  document.getElementById('results').innerHTML =
+    results.map(r=>`
+      <div class="result-card">
+        <b>${r.name}</b><br>
+        النسبة: ${r.prob}%
+      </div>
+    `).join('');
+}
+
 </script>
+
 </body>
 </html>
